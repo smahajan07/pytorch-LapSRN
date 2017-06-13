@@ -6,9 +6,10 @@ import time, math
 import scipy.io as sio
 import matplotlib.pyplot as plt
 from scipy.ndimage import imread
+from PIL import Image
 
 parser = argparse.ArgumentParser(description="PyTorch LapSRN Test")
-parser.add_argument("--cuda", action="store_true", default= True , help="use cuda?")
+parser.add_argument("--cuda", action="store_true", help="use cuda?")
 parser.add_argument("--model", default="model/model_epoch_100.pth", type=str, help="model path")
 parser.add_argument("--image", default="sample", type=str, help="image name")
 parser.add_argument("--scale", default=4, type=int, help="scale factor, Default: 4")
@@ -31,13 +32,16 @@ if cuda and not torch.cuda.is_available():
 
 model = torch.load(opt.model)["model"]
 
-im_gt_y = imread("Set5/" + opt.image + ".jpg")
-im_b_y = imread("Set5/" + opt.image + "_LR" + ".jpg")
-# im_l_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_l_y']
-           
-im_gt_y = im_gt_y.astype(float)
-im_b_y = im_b_y.astype(float)
-# im_l_y = im_l_y.astype(float)
+# im_gt_y = imread("Set5/" + opt.image + ".jpg")
+# im_b_y = imread("Set5/" + opt.image + "_LR" + ".jpg")
+# # im_l_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_l_y']
+#
+# im_gt_y = im_gt_y.astype(float)
+# im_b_y = im_b_y.astype(float)
+# # im_l_y = im_l_y.astype(float)
+
+im_gt_y = np.array(Image.open("Set5/" + opt.image + ".jpg"))
+im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg"))
 
 psnr_bicubic = PSNR(im_gt_y, im_b_y,shave_border=opt.scale)
 
