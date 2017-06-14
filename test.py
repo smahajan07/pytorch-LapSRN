@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import imread
 from PIL import Image
 
+
 parser = argparse.ArgumentParser(description="PyTorch LapSRN Test")
 parser.add_argument("--cuda", action="store_true", help="use cuda?")
 parser.add_argument("--model", default="model/model_epoch_100.pth", type=str, help="model path")
@@ -34,14 +35,16 @@ model = torch.load(opt.model)["model"]
 
 # im_gt_y = imread("Set5/" + opt.image + ".jpg")
 # im_b_y = imread("Set5/" + opt.image + "_LR" + ".jpg")
-# # im_l_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_l_y']
-#
+# im_l_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_l_y']
+# im_gt_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_gt_y']
+# im_b_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_b_y']
+
 # im_gt_y = im_gt_y.astype(float)
 # im_b_y = im_b_y.astype(float)
-# # im_l_y = im_l_y.astype(float)
+# im_l_y = im_l_y.astype(float)
 
-im_gt_y = np.array(Image.open("Set5/" + opt.image + ".jpg"))
-im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg"))
+im_gt_y = np.array(Image.open("Set5/" + opt.image + ".jpg").convert('L'))
+im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg").convert('L'))
 
 psnr_bicubic = PSNR(im_gt_y, im_b_y,shave_border=opt.scale)
 
@@ -88,3 +91,5 @@ ax = plt.subplot("133")
 ax.imshow(im_h_y)
 ax.set_title("Output(LapSRN)")
 plt.show()
+plt.savefig('output.png')
+
