@@ -10,7 +10,7 @@ from PIL import Image
 
 
 parser = argparse.ArgumentParser(description="PyTorch LapSRN Test")
-parser.add_argument("--cuda", action="store_true", help="use cuda?")
+parser.add_argument("--cuda", action="store_true", default=True, help="use cuda?")
 parser.add_argument("--model", default="model/model_epoch_100.pth", type=str, help="model path")
 parser.add_argument("--image", default="sample", type=str, help="image name")
 parser.add_argument("--scale", default=4, type=int, help="scale factor, Default: 4")
@@ -44,9 +44,11 @@ model = torch.load(opt.model)["model"]
 # im_l_y = im_l_y.astype(float)
 
 im_gt_y = np.array(Image.open("Set5/" + opt.image + ".jpg").convert('L'))
-im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg").convert('L'))
+im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg").resize((268,268), Image.BICUBIC).convert('L'))
+# im_b_y = np.array((im_b_y).convert('L'))
+# im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg").convert('L'))
 
-psnr_bicubic = PSNR(im_gt_y, im_b_y,shave_border=opt.scale)
+psnr_bicubic = PSNR(im_gt_y, im_b_y, shave_border=opt.scale)
 
 im_input = im_b_y/255.
 
@@ -71,7 +73,7 @@ im_h_y[im_h_y<0] = 0
 im_h_y[im_h_y>255.] = 255.            
 im_h_y = im_h_y[0,:,:]
 
-psnr_predicted = PSNR(im_gt_y, im_h_y,shave_border=opt.scale)
+psnr_predicted = PSNR(im_gt_y, im_h_y, shave_border=opt.scale)
 
 print("Scale=",opt.scale)
 print("PSNR_predicted=", psnr_predicted)
@@ -80,15 +82,15 @@ print("It takes {}s for processing".format(elapsed_time))
 
 fig = plt.figure()
 ax = plt.subplot("131")
-ax.imshow(im_gt_y)
+ax.imshow(im_gt_y, cmap='gray')
 ax.set_title("GT")
 
 ax = plt.subplot("132")
-ax.imshow(im_b_y)
+ax.imshow(im_b_y, cmap='gray')
 ax.set_title("Input(Bicubic)")
 
 ax = plt.subplot("133")
-ax.imshow(im_h_y)
+ax.imshow(im_h_y, cmap='gray')
 ax.set_title("Output(LapSRN)")
 plt.show()
 plt.savefig('output.png')
