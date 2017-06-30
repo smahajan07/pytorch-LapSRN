@@ -5,6 +5,7 @@ import numpy as np
 import time, math
 import scipy.io as sio
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 import matplotlib.image as mpimage
 from scipy.ndimage import imread
 from PIL import Image
@@ -13,6 +14,16 @@ parser = argparse.ArgumentParser(description="PyTorch LapSRN Test")
 parser.add_argument("--cuda", action="store_true", default=True, help="use cuda?")
 parser.add_argument("--model", default="model_adam/model_epoch_100.pth", type=str, help="model path")
 parser.add_argument("--image", default="face5_LR", type=str, help="image name")
+=======
+from scipy.ndimage import imread
+from PIL import Image
+
+
+parser = argparse.ArgumentParser(description="PyTorch LapSRN Test")
+parser.add_argument("--cuda", action="store_true", default=True, help="use cuda?")
+parser.add_argument("--model", default="model/model_epoch_100.pth", type=str, help="model path")
+parser.add_argument("--image", default="sample", type=str, help="image name")
+>>>>>>> 2210e516f77d2814e10d1cbacbe15b2cd61563ef
 parser.add_argument("--scale", default=4, type=int, help="scale factor, Default: 4")
 
 def PSNR(pred, gt, shave_border=0):
@@ -43,6 +54,7 @@ model = torch.load(opt.model)["model"]
 # im_b_y = im_b_y.astype(float)
 # im_l_y = im_l_y.astype(float)
 
+<<<<<<< HEAD
 # im_gt_y = np.array(Image.open("Set5/detected.jpg").convert('L'))
 im_l_y = np.array(Image.open("Set5/" + opt.image + ".jpg").convert('L'))
 # im_b_y = np.array(Image.open("Set5/" + opt.image + ".jpg").resize((149, 124), Image.BICUBIC).convert('L'))
@@ -53,6 +65,16 @@ im_l_y = np.array(Image.open("Set5/" + opt.image + ".jpg").convert('L'))
 # psnr_bicubic = PSNR(im_gt_y, im_b_y, shave_border=opt.scale)
 
 im_input = im_l_y/255.
+=======
+im_gt_y = np.array(Image.open("Set5/" + opt.image + ".jpg").convert('L'))
+im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg").resize((268,268), Image.BICUBIC).convert('L'))
+# im_b_y = np.array((im_b_y).convert('L'))
+# im_b_y = np.array(Image.open("Set5/" + opt.image + "_LR" + ".jpg").convert('L'))
+
+psnr_bicubic = PSNR(im_gt_y, im_b_y, shave_border=opt.scale)
+
+im_input = im_b_y/255.
+>>>>>>> 2210e516f77d2814e10d1cbacbe15b2cd61563ef
 
 im_input = Variable(torch.from_numpy(im_input).float()).view(1, -1, im_input.shape[0], im_input.shape[1])
 
