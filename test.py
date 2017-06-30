@@ -11,7 +11,7 @@ from PIL import Image
 
 parser = argparse.ArgumentParser(description="PyTorch LapSRN Test")
 parser.add_argument("--cuda", action="store_true", default=True, help="use cuda?")
-parser.add_argument("--model", default="model_adam/model_epoch_88.pth", type=str, help="model path")
+parser.add_argument("--model", default="model_adam/model_epoch_100.pth", type=str, help="model path")
 parser.add_argument("--image", default="face5_LR", type=str, help="image name")
 parser.add_argument("--scale", default=4, type=int, help="scale factor, Default: 4")
 
@@ -99,4 +99,4 @@ print("It takes {}s for processing".format(elapsed_time))
 # plt.show()
 # plt.savefig('output.png')
 
-mpimage.imsave('output10.png',im_h_y, cmap='gray')
+mpimage.imsave('output.png',im_h_y, cmap='gray')
